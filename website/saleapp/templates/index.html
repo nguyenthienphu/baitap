@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Trang Chủ</title>
-    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">
-</head>
-<body>
+{% extends 'layout/base.html' %}
+{% block title %}Trang chủ{% endblock %}
+{% block content %}
     <h1>Trang web bán hàng </h1>
     <ul>
         <li><a href="{{ url_for('products_list')}}"/>Tất cả sản phẩm</a></li>
@@ -13,5 +8,4 @@
         <li><a href="{{ url_for('products_list',category=c.id)}}">{{ c.name}}</a></li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}
