@@ -16,3 +16,6 @@ h1{
     width:80%;
     margin:0 auto;
 }
+.flex{
+    display:flex;
+}
