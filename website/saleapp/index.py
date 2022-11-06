@@ -2,6 +2,7 @@ from flask import render_template,request
 from saleapp import app
 import utils
 
+
 @app.route("/")
 def home():
     cates = utils.load_categories()
