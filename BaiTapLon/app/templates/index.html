@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Trang chủ {% endblock %}
+
+{% block content %}
+<h1 class="text-center text-primary">VÉ MÁY BAY</h1>
+
+{% if flight %}
+<ul class="pagination mt-1">
+    {% for i in range(pages) %}
+    <li class="page-item"><a class="page-link" href="/?page={{ i + 1 }}">{{ i + 1 }}</a></li>
+    {% endfor %}
+</ul>
+<div class="row">
+    {% for f in flight %}
+    <div class="col-xs-12 col-md-3" style="padding: 5px;">
+        <div class="card">
+            <img class="card-img-top" src="{{ f.hinh_anh }}" alt="Card image">
+            <div class="card-body">
+                <h4 class="card-title">{{f.ten_chuyen_bay}}</h4>
+                <p class="card-text">{{ f.gia }} VNĐ</p>
+                <a href="{{url_for('flight_detail',flight_id=f.id )}}" class="btn btn-primary">Xem chi tiết</a>
+                <a class="btn btn-danger" onclick="addToTicket({{ f.id }}, '{{ f.ten_chuyen_bay }}', {{f.gia}})">Đặt vé</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<h3 class="text-info">Hiện tại không có vé !!!</h3>
+{% endif %}
+
+{% endblock %}

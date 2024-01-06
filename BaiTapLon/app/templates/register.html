@@ -1,0 +1,45 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng ký{% endblock %}
+
+{% block content %}
+<h1 class="text-center text-primary">ĐĂNG KÝ NGƯỜI DÙNG</h1>
+
+{% if err_msg %}
+<div class="alert alert-danger">
+    <h4>{{ err_msg }}</h4>
+</div>
+{% endif %}
+<form method="post" action="/register" enctype="multipart/form-data">
+    <div class="mb-3 mt-3">
+        <label for="name" class="form-label">Tên</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Tên" required>
+    </div>
+    <div class="mb-3 mt-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+    </div>
+    <div class="mb-3 mt-3">
+        <label for="phone" class="form-label">Số điện thoại</label>
+        <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required>
+    </div>
+    <div class="mb-3 mt-3">
+        <label for="username" class="form-label">Tên đăng nhập</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
+    </div>
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+    </div>
+    <div class="mb-3">
+        <label for="avatar" class="form-label">Ảnh đại diện</label>
+        <input type="file" class="form-control" id="avatar" name="avatar">
+    </div>
+    <button type="submit" class="btn btn-primary">Đăng ký</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Chi tiết vé{% endblock %}
+
+{% block content %}
+<h1 class="text-center text-primary">CHI TIẾT VÉ <span style="text-transform: uppercase;">{{ flight.ten_chuyen_bay}}</span></h1>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <img src="{{flight.hinh_anh}}" alt="{{ flight.ten_chuyen_bay}}" width=500/>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <h2>Tên chuyến bay: {{ flight.ten_chuyen_bay}}</h2>
+        <h4>Ngày-giờ: {{ flight.ngay_gio}}</h4>
+        <h4>Giá vé: {{ "{:,.0f}".format(flight.gia) }} VNĐ</h4>
+        <h4>Số lượng ghế loại 1: {{ flight.ghe_1}}</h4>
+        <h4>Số lượng ghế loại 2: {{ flight.ghe_2}}</h4>
+        <h4>fasfasfa: {{ flight.airport.flight_id}}</h4>
+        <h4>fasfasfa: {{ flight.airport.1}}</h4>
+        <h4>Thời gian bay: {{ flight.time}} phút</h4>
+        <a href="#" class="btn btn-danger" onclick="addToTicket({{ flight.id }}, '{{ flight.ten_chuyen_bay }}', {{flight.gia}})">Đặt vé</a>
+    </div>
+</div>
+
+<hr>
+
+{% if current_user.is_authenticated %}
+<div>
+    <div class="form-group">
+        <textarea class="form-control" id="commentId" placeholder="Nhập nội dung bình luận"></textarea>
+    </div>
+    <input type="button" class="btn btn-primary mt-2" value="Bình luận" onclick="addComment({{ flight.id }})"/>
+</div>
+{% else %}
+<a href="{{ url_for('login')}}">Đăng nhập để bình luận</a>
+{% endif %}
+
+<ul class="pagination mt-1">
+    {% for i in range(pages) %}
+    <li class="page-item"><a class="page-link" href="/flight/{{ flight.id}}?page={{ i + 1 }}">{{ i + 1 }}</a></li>
+    {% endfor %}
+</ul>
+
+<div id="commentArea">
+    {% for c in comment %}
+    <div class="row">
+        <div class="col-md-2 col-xs-4">
+            <img src="{{c.user.avatar}}" class="img-fluid rounded-circle" alt="demo"/>
+        </div>
+        <div class="col-md-10 col-xs-8">
+            <p> {{c.content}} </p>
+            <p><em class="date"> {{c.created_date}} </em></p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    window.onload = function() {
+        let d = document.getElementsByClassName('date')
+        for (let i = 0; i < d.length; i++)
+            d[i].innerText = moment(d[i].innerText).locale('vi').fromNow()
+    }
+</script>
+{% endblock %}

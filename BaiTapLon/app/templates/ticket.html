@@ -1,0 +1,54 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đặt vé{% endblock %}
+
+{% block content %}
+<h1 class="text-center text-primary">ĐẶT VÉ</h1>
+
+{% if 'ticket' in session and session['ticket'] %}
+<table class="table">
+    <tr>
+        <th>Mã vé</th>
+        <th>Tên vé</th>
+        <th>Đơn giá</th>
+        <th>Số lượng</th>
+    </tr>
+    {% for t in session['ticket'].values() %}
+    <tr id="flight{{ t.id }}">
+        <td>{{ t.id }}</td>
+        <td>{{ t.ten_chuyen_bay}}</td>
+        <td>{{ "{:,.0f}".format(t.gia) }} VNĐ</td>
+        <td>
+            <div class="form-group">
+                <input type="number"
+                       min="1"
+                       onblur="updateTicket({{ t.id }}, this)"
+                       value="{{ t.quantity }}"
+                       class="form-control"/>
+            </div>
+        </td>
+        <td>
+            <input type="button"
+                   value="Xoá"
+                   class="btn btn-danger"
+                   onclick="deleteTicket({{ t.id }})"/>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="alert alert-info">
+    <h5>Tổng vé: <span class="ticket-counter">{{ sum.total_quantity }}</span> </h5>
+    <h5>Tổng tiền: <span id="total-amount">{{ "{:,.0f}".format(sum.total_amount) }} </span> VNĐ</h5>
+</div>
+
+{% if current_user.is_authenticated %}
+<a class="btn btn-success" href="/pay">Thanh toán</a>
+{% else %}
+<a href="{{ url_for('login', next='ticket')}}">Đăng nhập để thanh toán...</a>
+{% endif %}
+
+{% else %}
+<p><i>Bạn chưa đặt vé nào !!!</i></p>
+{% endif %}
+
+{% endblock %}

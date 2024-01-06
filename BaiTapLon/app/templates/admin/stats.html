@@ -1,0 +1,181 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+
+<h3 class="text-center text-success">BÁO CÁO SỐ LƯỢNG VÉ</h3>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Tên vé</th>
+                <th>Số lượng</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{s[0].id}}</td>
+                <td>{{s[0].ten_loai}}</td>
+                <td>{{s[1]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+            <canvas id="stats" ></canvas>
+    </div>
+</div>
+
+<h3 class="text-center text-success">BÁO CÁO DOANH THU THEO VÉ</h3>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Mã vé</th>
+                <th>Tên vé</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for r in revenue %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>
+                    {% if r[2] %}
+                    {{ "{:,.0f}".format(r[2]) }} VNĐ
+                    {% else %}
+                    0 VNĐ
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="text" name="kw" class="form-control" placeholder="Nhập từ khóa...">
+            </div>
+            <div class="form-group">
+                 <label>Từ ngày</label>
+                <input type="date" name="from_date" class="form-control"  />
+            </div>
+            <div class="form-group">
+                 <label>Đến ngày</label>
+                <input type="date" name="to_date" class="form-control"  />
+            </div>
+            <input type="submit" value="Thống kê" class="btn btn-info" />
+        </form>
+        <canvas id="revenue"></canvas>
+    </div>
+</div>
+
+<h3 class="text-center text-success">BÁO CÁO DOANH THU THEO THÁNG</h3>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Tháng</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for s in month_stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ "{:,.0f}".format(s[1]) }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="number" min="2000" class="form-control" placeholder="Nhập năm" name="year"/>
+            </div>
+            <input type="submit" value="Thống kê" class="btn btn-info" />
+        </form>
+        <canvas id="monthRevenue" ></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = [], data = [], colors = [], borderColors = []
+    let labels2 = [], data2 = [], colors2 = [], borderColors2 = []
+    let labels3 = [], data3 = [], colors3 = [], borderColors3 = []
+    let r, g, b
+
+
+    {% for s in stats %}
+        labels.push('{{s[0].ten_loai}}')
+        data.push({{s[1]}})
+
+        r = parseInt(Math.random()*255)
+        g = parseInt(Math.random()*255)
+        b = parseInt(Math.random()*255)
+
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+        borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+
+    {% for r in revenue %}
+    {% if r[2] %}
+    labels2.push('{{r[1]}}')
+    data2.push({{r[2]}})
+
+    r = parseInt(Math.random()*255)
+    g = parseInt(Math.random()*255)
+    b = parseInt(Math.random()*255)
+
+    colors2.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors2.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endif %}
+    {% endfor %}
+
+
+    {% for s in month_stats %}
+    labels3.push('{{s[0]}}')
+    data3.push({{s[1]}})
+
+    r = parseInt(Math.random()*255)
+    g = parseInt(Math.random()*255)
+    b = parseInt(Math.random()*255)
+
+    colors3.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors3.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+    window.onload = function(){
+    const ctx = document.getElementById('stats').getContext('2d')
+    const ctx2 = document.getElementById('revenue').getContext('2d')
+    const ctx3 = document.getElementById('monthRevenue').getContext('2d')
+
+    loadChart(ctx, 'Thống kê doanh thu theo tháng', labels, data, 'doughnut', colors, borderColors)
+    loadChart(ctx2, 'Thống kê doanh thu theo tháng', labels2, data2, 'bar', colors2, borderColors2)
+    loadChart(ctx3, 'Thống kê doanh thu theo tháng', labels3, data3, 'line', colors3, borderColors3)
+}
+
+function loadChart(ctx, label, labels, data, type, colors, borderColors) {
+    const myChart = new Chart(ctx, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: colors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+</script>
+
+{% endblock %}

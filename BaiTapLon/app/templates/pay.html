@@ -1,0 +1,27 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Thanh toán online{% endblock %}
+
+{% block content %}
+<h1 class="text-center text-primary">THANH TOÁN</h1>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <form method="post" action="/pay">
+            <div class="mb-3 mt-3">
+                <label for="bank" class="form-label">Tên ngân hàng</label>
+                <input type="text" class="form-control" id="bank" name="bank" placeholder="Tên ngân hàng" required>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="account" class="form-label">Số tài khoản</label>
+                <input type="text" class="form-control" id="account" name="account" placeholder="Số tài khoản" required>
+            </div>
+            <button type="submit" class="btn btn-success" onclick="pay()">Thanh toán</button>
+        </form>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <h4 class="text-center text-success">Mã QR</h4>
+        <img src="https://res.cloudinary.com/de4ynzwro/image/upload/v1704283668/xgrmahifrloovxg6qhfd.png" alt="mã qr" width=200 style="margin-left: 130px;" />
+    </div>
+</div>
+{% endblock %}
